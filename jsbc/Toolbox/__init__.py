@@ -8,14 +8,14 @@ __version__ = '0.0.0'
 
 class SettingsClass(OrderedDict):
     def __init__(self, Default=[], Data={}):
-        super().__init__()
+        super(SettingsClass, self).__init__()
         self.Default = OrderedDict()
         self.addDefault(Default)
         self.addData(Data)
 
     def __getitem__(self, key):
         try:
-            value = super().__getitem__(key)
+            value = super(SettingsClass, self).__getitem__(key)
             if isinstance(value, dict) or self.Default[key] != value:
                 return value
             else:
@@ -28,7 +28,7 @@ class SettingsClass(OrderedDict):
     def __setitem__(self, key, value):
         try:
             if self.Default[key] != value:
-                super().__setitem__(key, value)
+                super(SettingsClass, self).__setitem__(key, value)
             else:
                 try:
                     del self[key]
@@ -74,7 +74,7 @@ class SettingsClass(OrderedDict):
                 Dict[key] = self.Default[key].export(defaults)
             else:
                 try:
-                    Dict[key] = super().__getitem__(key)
+                    Dict[key] = super(SettingsClass, self).__getitem__(key)
                 except KeyError:
                     if defaults:
                         Dict[key] = self.Default[key]
