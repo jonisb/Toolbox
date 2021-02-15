@@ -52,3 +52,8 @@ class test_SettingsClass(unittest.TestCase):
         settings['name']['name2'] = 'test2'
         assert settings.export() == {'name': {}}, settings.export()
         assert settings.export(True) == {'name': {'name2': 'test2'}}
+
+class test_settingsObject(unittest.TestCase):
+    def test_test(self):
+        from jsbc.Toolbox import SettingsClass, settings
+        assert type(settings) == SettingsClass

@@ -80,3 +80,6 @@ class SettingsClass(OrderedDict):
                         Dict[key] = self.Default[key]
 
         return Dict
+
+
+settings = SettingsClass()
