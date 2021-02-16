@@ -83,3 +83,15 @@ class SettingsClass(OrderedDict):
 
 
 settings = SettingsClass()
+
+
+def DefaultSettings(AddDefaults, Data=settings):
+    if isinstance(Data, SettingsClass):
+        Settings = Data
+        Settings.addDefault(AddDefaults)
+    else:
+        Settings = SettingsClass(AddDefaults)
+
+    Settings.addData(Data)
+
+    return Settings
