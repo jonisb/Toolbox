@@ -35,7 +35,12 @@ class SettingsClass(OrderedDict):
                 except KeyError:  # TODO
                     pass
         except KeyError:  # TODO
-            raise KeyError('Default key not defined', key)
+            for item in self.Default:
+                if isinstance(key, item):
+                    super(SettingsClass, self).__setitem__(key, value)
+                    return
+            else:
+                raise KeyError('Default key not defined', key)
 
     def addDefault(self, Default):
         for key, value in Default if isinstance(Default, list) else Default.items():
@@ -70,6 +75,14 @@ class SettingsClass(OrderedDict):
     def export(self, defaults=False):
         Dict = {}
         for key in self.Default:
+            if isinstance(key, type):
+                for item in self:
+                    if isinstance(self[item], SettingsClass):
+                        Dict[item] = self[item].export(defaults)
+                    else:
+                        Dict[item] = self[item]
+                continue
+
             if isinstance(self.Default[key], SettingsClass):
                 Dict[key] = self.Default[key].export(defaults)
             else:
