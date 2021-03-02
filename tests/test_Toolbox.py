@@ -54,14 +54,14 @@ class test_SettingsClass(unittest.TestCase):
         assert settings.export(True) == {'name': {'name2': 'test2'}}
 
     def test_create_object_with_type(self):
-        from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
+        from jsbc.Toolbox import SettingsClass, DefaultSettings
         settingsDefaults = [
             ('servers', [
                 (int, [
                 ]),
             ]),
         ]
-        DefaultSettings(settingsDefaults)
+        settings = DefaultSettings(settingsDefaults, SettingsClass())
 
         assert settings.export(True) == {'servers': {}}, settings.export()
         settings['servers'][15] = {}
