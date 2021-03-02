@@ -75,6 +75,55 @@ class test_SettingsClass(unittest.TestCase):
         except KeyError:
             self.assertTrue(True)
 
+    def test_create_object_save_and_load(self):
+        from jsbc.compat.pathlib import pathlib
+        from jsbc.Toolbox import SettingsClass, DefaultSettings
+
+        settingsDefaults = [
+            ('client', [
+                ('name', 'KodiLib'),
+                ('cache path', pathlib.Path('cache')),
+                ('network', [
+                    ('User-Agent', "{0}/{1} {2}"),
+                ]),
+                ('eventclient', [
+                    ('enabled', True),
+                ]),
+                ('icon', [
+                    ('url', None),
+                    ('type', None),
+                ]),
+            ]),
+            ('server', [
+                ('friendlyName', 'Kodi'),
+                ('name', 'Kodi'),
+                ('version', ''),
+                ('network', [
+                    ('ip', 'localhost'),
+                    ('udp', {
+                        'port': 9777,
+                    }),
+                    ('http', {
+                        'port': 8080,
+                    }),
+                    ('upnp', {
+                        'id': '',
+                    }),
+                ]),
+            ]),
+            ('commands', [
+                ('actions', "(('Code', {0}, {1}), ('HTML', 'http://kodi.wiki/view/Action_IDs', ['Action', 'Description']))"),
+            ]),
+        ]
+        settings = DefaultSettings(settingsDefaults, SettingsClass())
+        settings.save()
+
+        settings2 = DefaultSettings(settingsDefaults, SettingsClass())
+        settings2.load()
+        assert settings.export(True) == settings2.export(True)
+        settings.filename.unlink()
+
+
 
 class test_settingsObject(unittest.TestCase):
     def test_test(self):

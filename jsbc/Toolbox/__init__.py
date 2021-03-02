@@ -1,13 +1,29 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals, division, absolute_import
 
+import json
 from jsbc.compat.OrderedDict import OrderedDict
+from jsbc.compat.pathlib import pathlib
 
 __version__ = '0.0.0'
 
 
+def encode_Path(obj):
+    if isinstance(obj, pathlib.Path):
+        return str(obj)
+    raise TypeError(repr(obj) + " is not JSON serializable")
+
+
+def decode_Path(dct):
+    if 'cache path' in dct:
+        dct['cache path'] = pathlib.Path(dct['cache path'])
+        return dct
+    return dct
+
+
 class SettingsClass(OrderedDict):
     def __init__(self, Default=[], Data={}):
+        self.filename = pathlib.Path('settings.json')
         super(SettingsClass, self).__init__()
         self.Default = OrderedDict()
         self.addDefault(Default)
@@ -70,7 +86,10 @@ class SettingsClass(OrderedDict):
             if self.Default[key] != value:
                 self[key] = value
             else:
-                del self[key]
+                try:
+                    del self[key]
+                except KeyError:
+                    pass
 
     def export(self, defaults=False):
         Dict = {}
@@ -93,6 +112,16 @@ class SettingsClass(OrderedDict):
                         Dict[key] = self.Default[key]
 
         return Dict
+
+    def save(self, filename=None):
+        self.filename = pathlib.Path(filename or self.filename)
+        with self.filename.open('w') as f:
+            json.dump(self.export(True), f, indent=4, default=encode_Path)
+
+    def load(self, filename=None):
+        self.filename = pathlib.Path(filename or self.filename)
+        with self.filename.open('r') as f:
+            self.addData(json.load(f, object_hook=decode_Path))
 
 
 settings = SettingsClass()
