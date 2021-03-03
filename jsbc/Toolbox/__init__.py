@@ -115,8 +115,14 @@ class SettingsClass(OrderedDict):
 
     def save(self, filename=None):
         self.filename = pathlib.Path(filename or self.filename)
-        with self.filename.open('w') as f:
-            json.dump(self.export(True), f, indent=4, default=encode_Path)
+        try:
+            unicode
+        except NameError:
+            with self.filename.open('w') as f:
+                json.dump(self.export(True), f, indent=4, default=encode_Path)
+        else:
+            with self.filename.open('wb') as f:
+                json.dump(self.export(True), f, indent=4, default=encode_Path)
 
     def load(self, filename=None):
         self.filename = pathlib.Path(filename or self.filename)
