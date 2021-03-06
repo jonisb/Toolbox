@@ -94,6 +94,17 @@ class test_SettingsClass(unittest.TestCase):
         settings.addData({'servers': 'test'})
         assert settings.export(True) == {'servers': 'test'}
 
+    def test_create_object_with_addData_and_type_with_subdata(self):
+        from jsbc.Toolbox import SettingsClass, DefaultSettings
+        settingsDefaults = [
+            (str, [(str, str)]),
+        ]
+        settings = DefaultSettings(settingsDefaults, SettingsClass())
+        settings.addData({'servers': {'32bit': "60cead10-0d05-624e-22e5-e8984c19a4f5",
+                                    '64bit': "d21c3a54-52b3-18d3-5d6c-aae941c6757d"}})
+        assert settings.export(True) == {'servers': {'32bit': "60cead10-0d05-624e-22e5-e8984c19a4f5",
+                                    '64bit': "d21c3a54-52b3-18d3-5d6c-aae941c6757d"}}
+
     def test_create_object_save_and_load(self):
         from jsbc.compat.pathlib import pathlib
         from jsbc.Toolbox import SettingsClass, DefaultSettings
@@ -141,7 +152,6 @@ class test_SettingsClass(unittest.TestCase):
         settings2.load()
         assert settings.export(True) == settings2.export(True)
         settings.filename.unlink()
-
 
 
 class test_settingsObject(unittest.TestCase):

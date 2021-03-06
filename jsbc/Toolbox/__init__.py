@@ -79,6 +79,8 @@ class SettingsClass(OrderedDict):
             if isinstance(value, dict):
                 try:
                     self[key].addData(value)
+                except KeyError:
+                    self[key] = SettingsClass(value)
                 except ValueError:
                     pass
                 else:
