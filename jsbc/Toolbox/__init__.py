@@ -32,7 +32,7 @@ class SettingsClass(OrderedDict):
     def __getitem__(self, key):
         try:
             value = super(SettingsClass, self).__getitem__(key)
-            if isinstance(value, dict) or self.Default[key] != value:
+            if isinstance(value, dict) or self.Default.get(key, None) != value:
                 return value
             else:
                 del self[key]
@@ -83,13 +83,7 @@ class SettingsClass(OrderedDict):
                     pass
                 else:
                     continue
-            if self.Default[key] != value:
-                self[key] = value
-            else:
-                try:
-                    del self[key]
-                except KeyError:
-                    pass
+            self[key] = value
 
     def export(self, defaults=False):
         Dict = {}

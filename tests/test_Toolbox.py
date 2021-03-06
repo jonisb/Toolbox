@@ -1,6 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals, division, absolute_import
 
+from jsbc.compat.python3 import *
 import unittest
 
 
@@ -74,6 +75,24 @@ class test_SettingsClass(unittest.TestCase):
             settings['servers']['16'] = {'32bit': "0c91ea09-d44a-bc0c-f4da-75e87388e178"}
         except KeyError:
             self.assertTrue(True)
+
+    def test_create_object_with_addData(self):
+        from jsbc.Toolbox import SettingsClass, DefaultSettings
+        settingsDefaults = [
+            ('servers', 'test'),
+        ]
+        settings = DefaultSettings(settingsDefaults, SettingsClass())
+        settings.addData({'servers': 'test'})
+        assert settings.export(True) == {'servers': 'test'}
+
+    def test_create_object_with_addData_and_type(self):
+        from jsbc.Toolbox import SettingsClass, DefaultSettings
+        settingsDefaults = [
+            (str, str),
+        ]
+        settings = DefaultSettings(settingsDefaults, SettingsClass())
+        settings.addData({'servers': 'test'})
+        assert settings.export(True) == {'servers': 'test'}
 
     def test_create_object_save_and_load(self):
         from jsbc.compat.pathlib import pathlib
