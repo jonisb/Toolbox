@@ -8,22 +8,9 @@ from jsbc.compat.pathlib import pathlib
 __version__ = '0.0.0'
 
 
-def encode_Path(obj):
-    if isinstance(obj, pathlib.Path):
-        return str(obj)
-    raise TypeError(repr(obj) + " is not JSON serializable")
-
-
-def decode_Path(dct):
-    if 'cache path' in dct:
-        dct['cache path'] = pathlib.Path(dct['cache path'])
-        return dct
-    return dct
-
-
 class SettingsClass(OrderedDict):
     def __init__(self, Default=[], Data={}):
-        self.filename = pathlib.Path('settings.json')
+        self.filename = pathlib.Path('jsbc.settings.json')
         super(SettingsClass, self).__init__()
         self.Default = OrderedDict()
         self.addDefault(Default)
@@ -115,15 +102,15 @@ class SettingsClass(OrderedDict):
             unicode
         except NameError:
             with self.filename.open('w') as f:
-                json.dump(self.export(True), f, indent=4, default=encode_Path)
+                json.dump(self.export(True), f, indent=4)
         else:
             with self.filename.open('wb') as f:
-                json.dump(self.export(True), f, indent=4, default=encode_Path)
+                json.dump(self.export(True), f, indent=4)
 
     def load(self, filename=None):
         self.filename = pathlib.Path(filename or self.filename)
         with self.filename.open('r') as f:
-            self.addData(json.load(f, object_hook=decode_Path))
+            self.addData(json.load(f))
 
 
 settings = SettingsClass()
