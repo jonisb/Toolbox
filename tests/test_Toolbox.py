@@ -106,13 +106,12 @@ class test_SettingsClass(unittest.TestCase):
                                     '64bit': "d21c3a54-52b3-18d3-5d6c-aae941c6757d"}}
 
     def test_create_object_save_and_load(self):
-        from jsbc.compat.pathlib import pathlib
         from jsbc.Toolbox import SettingsClass, DefaultSettings
 
         settingsDefaults = [
             ('client', [
                 ('name', 'KodiLib'),
-                ('cache path', pathlib.Path('cache')),
+                ('cache path', 'cache'),
                 ('network', [
                     ('User-Agent', "{0}/{1} {2}"),
                 ]),
